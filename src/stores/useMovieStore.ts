@@ -51,11 +51,15 @@ export const useMovieStore = defineStore("movieStore", () => {
     "All",
     ...new Set(movies.value.map((movie) => movie.genre)),
   ]);
-  const selectedGenre = ref<string | null>("All");
+  const selectedGenre = ref<string>("All");
 
   const setGenre = (genre: string) => {
     selectedGenre.value = genre;
   };
 
-  return {movies, genres, selectedGenre, setGenre};
+  const filteredMovies = computed(() => {
+    return selectedGenre.value === "All" ? movies.value : movies.value.filter(movie => movie.genre === selectedGenre.value)
+  })
+
+  return {movies, genres, selectedGenre, setGenre, filteredMovies};
 });

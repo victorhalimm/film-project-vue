@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[45vh]">
+  <div class="h-[45vh]" @click="goToDetail(movie.id)">
     <img
       :src="movie.imageUrl"
       :alt="movie.title"
@@ -12,7 +12,13 @@
 </template>
 
 <script setup>
+import router from "../router";
+
 defineProps({
   movie: Object,
 });
+
+function goToDetail(id) {
+    router.push(`/movie/${id}`);
+}
 </script>
