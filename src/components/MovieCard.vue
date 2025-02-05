@@ -1,7 +1,7 @@
 <template>
   <div class="h-[45vh]" @click="goToDetail(movie.id)">
     <img
-      :src="movie.imageUrl"
+      :src="movie.image"
       :alt="movie.title"
       class="w-full h-[80%] object-cover shadow-md rounded-lg"
     />

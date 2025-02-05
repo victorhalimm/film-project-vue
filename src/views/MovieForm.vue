@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, toRaw, watch } from "vue";
 import type { Movie } from "../types/movie";
+
 
 const form = ref({
   title: "",
-  duration: "",
+  duration: 0,
   rating: 0,
   genre: "",
   description: "",
-  imageUrl: "/dummies/movie-dummy-2.jpg",
+  image: "/dummies/movie-dummy-2.jpg",
 });
+
+const emit = defineEmits(["save"]);
 
 const props = defineProps<{ movie?: Movie }>(); 
 
@@ -22,10 +25,15 @@ watch(
   },
   { immediate: true }
 );
+
+
+const saveMovie = () => {
+    emit("save", toRaw(form.value));
+}
 </script>
 
 <template>
-  <form class="flex flex-col gap-4 bg-white p-6 shadow-lg rounded-lg">
+  <form @submit.prevent="saveMovie" class="flex flex-col gap-4 bg-white p-6 shadow-lg rounded-lg">
     <input
       v-model="form.title"
       placeholder="Title"

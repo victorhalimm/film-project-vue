@@ -6,12 +6,18 @@ import MovieCard from "../components/MovieCard.vue";
 import { useMovieStore } from "../stores/useMovieStore";
 
 import { RouterLink } from "vue-router";
+import { onMounted } from "vue";
+import LoadingBar from "../components/LoadingBar.vue";
 
 addIcons(FaSearch, BiPlus);
 
 const movieStore = useMovieStore();
 
-console.log(movieStore.movies);
+onMounted(() => {
+    movieStore.getMovies();
+});
+
+
 </script>
 
 <template>
@@ -53,6 +59,11 @@ console.log(movieStore.movies);
         Create New Film
       </RouterLink>
     </div>
+
+    <div class="flex justify-center items-center">
+        <loading-bar v-if="movieStore.loading"/>
+    </div>
+    
     <div class="grid grid-cols-2 lg:grid-cols-5 w-full mt-12 gap-[18px]">
       <MovieCard
         v-for="movie in movieStore.filteredMovies"
