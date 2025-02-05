@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { addIcons, OhVueIcon } from "oh-vue-icons";
-import { FaSearch } from "oh-vue-icons/icons";
+import { BiPlus, FaSearch } from "oh-vue-icons/icons";
 
 import MovieCard from "../components/MovieCard.vue";
 import { useMovieStore } from "../stores/useMovieStore";
 
-addIcons(FaSearch);
+import { RouterLink } from "vue-router";
+
+addIcons(FaSearch, BiPlus);
 
 const movieStore = useMovieStore();
 
-console.log(movieStore.movies)
+console.log(movieStore.movies);
 </script>
 
 <template>
@@ -18,7 +20,9 @@ console.log(movieStore.movies)
       <div class="flex space-x-4">
         <button
           v-for="genre in movieStore.genres"
-          :class="genre === movieStore.selectedGenre ? 'bg-blue-500 text-white' : ''"
+          :class="
+            genre === movieStore.selectedGenre ? 'bg-blue-500 text-white' : ''
+          "
           class="border-2 px-8 py-2 text-lg rounded-full duration-150"
           @click="movieStore.setGenre(genre)"
         >
@@ -41,7 +45,14 @@ console.log(movieStore.movies)
       </div>
     </div>
 
-
+    <div class="py-4 flex justify-end">
+      <RouterLink
+        to="/movie/create"
+        class="rounded-3xl bg-blue-500 text-white p-3 mt-4"
+      >
+        Create New Film
+      </RouterLink>
+    </div>
     <div class="grid grid-cols-2 lg:grid-cols-5 w-full mt-12 gap-[18px]">
       <MovieCard
         v-for="movie in movieStore.filteredMovies"
