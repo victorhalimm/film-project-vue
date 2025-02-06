@@ -3,13 +3,16 @@ import { ref, type Ref, computed } from "vue";
 
 import type { Movie } from "../types/movie";
 import {
+  deleteMovieById,
   fetchAllMovies,
   fetchMoviesByGenre,
   insertMovie,
   updateMovieById,
 } from "../services/movieServices";
+import { useToast } from "vue-toastification";
 
 export const useMovieStore = defineStore("movieStore", () => {
+  const toast = useToast();
   const movies: Ref<Movie[]> = ref([]);
 
   const loading = ref<boolean>(false);
@@ -20,6 +23,7 @@ export const useMovieStore = defineStore("movieStore", () => {
       loading.value = true;
       error.value = null;
       movies.value = await fetchAllMovies();
+
     } catch (err) {
       console.log(err);
       error.value = "Failed to fetch movie";
@@ -50,9 +54,10 @@ export const useMovieStore = defineStore("movieStore", () => {
       // Biar local juga keubah
       movies.value.push(newMovie);
 
-      return "Movie created successfully!";
+      toast.success("Movie created successfully!");
     } catch (err: any) {
       error.value = err.message || "Failed to create movie.";
+      toast.error(error.value);
     } finally {
       loading.value = false;
     }
@@ -69,8 +74,11 @@ export const useMovieStore = defineStore("movieStore", () => {
       if (index !== -1) {
         movies.value[index] = { ...movieData };
       }
+
+      toast.success("Succesfully updated a movie data!");
     } catch (err: any) {
       error.value = err.message || "Failed to update movie.";
+      toast.error(error.value);
     } finally {
       loading.value = false;
     }
@@ -96,6 +104,24 @@ export const useMovieStore = defineStore("movieStore", () => {
     return movies.value.find((m) => m.id === id);
   };
 
+  const deleteMovie = async (id : number) => {
+    try {
+      loading.value = true;
+      error.value = null;
+      await deleteMovieById(id);
+      
+      //biar lokal juga keubah
+      movies.value.splice(movies.value.findIndex(m => m.id == id), 1);
+      
+      toast.success('Succesfully deleted a movie data');
+    } catch (err : any) {
+      error.value = err.message || "Failed to remove a film!";
+      toast.error(error.value);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     loading,
     error,
@@ -108,6 +134,7 @@ export const useMovieStore = defineStore("movieStore", () => {
     getMovies,
     getMoviesByGenre,
     updateMovie,
-    createMovie
+    createMovie,
+    deleteMovie
   };
 });

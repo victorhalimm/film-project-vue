@@ -4,6 +4,7 @@ import { useMovieStore } from "../stores/useMovieStore";
 import MovieForm from "./MovieForm.vue";
 import { computed } from "vue";
 import type { Movie } from "../types/movie";
+import router from "../router";
 
 const route = useRoute();
 const movieStore = useMovieStore();
@@ -13,8 +14,9 @@ const movie = computed(() => {
 });
 
 const updateMovieToDB = (updatedMovie: Movie) => {
-  console.log(updatedMovie);
+//   console.log(updatedMovie);
   movieStore.updateMovie(updatedMovie);
+  router.push('/');
 };
 </script>
 
